@@ -2,50 +2,136 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<title>Calculator |@Simplified_Learner</title>
-	<link rel="shortcut icon" href="logo.png" type="image/png" />
-	<link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Calculator | Simplified Learner</title>
+    <link rel="shortcut icon" href="logo.png" type="image/png">
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-	<div class="container">
-		<input type="text" id="useinp" placeholder="0" disabled />
-		<input type="text" id="compout" placeholder="0" disabled />
-		<table>
-			<tr>
-				<td onclick="calcad('(')">(</td>
-				<td onclick="calcad(')')">)</td>
-				<td onclick="removech()">&lt;-</td>
-				<td onclick="calcad('+')" class="vari">+</td>
-			</tr>
-			<tr>
-				<td onclick="calcad('7')">7</td>
-				<td onclick="calcad('8')">8</td>
-				<td onclick="calcad('9')">9</td>
-				<td onclick="calcad('-')" class="vari">-</td>
-			</tr>
-			<tr>
-				<td onclick="calcad('4')">4</td>
-				<td onclick="calcad('5')">5</td>
-				<td onclick="calcad('6')">6</td>
-				<td onclick="calcad('*')" class="vari">*</td>
-			</tr>
-			<tr>
-				<td onclick="calcad('1')">1</td>
-				<td onclick="calcad('2')">2</td>
-				<td onclick="calcad('3')">3</td>
-				<td onclick="calcad('/')" class="vari">/</td>
-			</tr>
-			<tr>
-				<td onclick="reset()"><b>C</b></td>
-				<td onclick="calcad('0')">0</td>
-				<td onclick="calcad('.')">.</td>
-				<td class="equalbtn" onclick="execm()">=</td>
-			</tr>
-		</table>
-	</div>
-	<script src="./script.js"></script>
+    <div class="header">
+        <button class="toggle-theme" onclick="toggleTheme()">Toggle Theme</button>
+        <button class="toggle-mode" onclick="toggleMode()">Switch Mode</button>
+        <button class="customize" onclick="openCustomization()">Customize</button>
+    </div>
+    <div class="container" role="region" aria-label="Calculator">
+        <input type="text" id="useinp" placeholder="0" aria-label="Input" disabled>
+        <input type="text" id="compout" placeholder="0" aria-label="Output" disabled>
+        <button class="voice-input" onclick="startVoiceInput()">🎤 Voice Input</button>
+        <button class="converter" onclick="openConverter()">Unit/Currency Converter</button>
+        <div class="history" id="history" aria-label="History">
+            <h3>History</h3>
+            <input type="text" id="searchHistory" placeholder="Search history" onkeyup="searchHistory()">
+            <ul id="historyList"></ul>
+            <button class="export-history" onclick="exportHistory()">Export History</button>
+            <button class="clear-history" onclick="clearHistory()">Clear History</button>
+        </div>
+        <table role="grid">
+            <!-- Standard Buttons -->
+            <tr>
+                <td onclick="calcad('(')" role="button" aria-label="Left Parenthesis" tabindex="0">(</td>
+                <td onclick="calcad(')')" role="button" aria-label="Right Parenthesis" tabindex="0">)</td>
+                <td onclick="removech()" role="button" aria-label="Backspace" tabindex="0">←</td>
+                <td onclick="calcad('+')" class="vari" role="button" aria-label="Addition" tabindex="0">+</td>
+            </tr>
+            <tr>
+                <td onclick="calcad('7')" role="button" aria-label="7" tabindex="0">7</td>
+                <td onclick="calcad('8')" role="button" aria-label="8" tabindex="0">8</td>
+                <td onclick="calcad('9')" role="button" aria-label="9" tabindex="0">9</td>
+                <td onclick="calcad('-')" class="vari" role="button" aria-label="Subtraction" tabindex="0">-</td>
+            </tr>
+            <tr>
+                <td onclick="calcad('4')" role="button" aria-label="4" tabindex="0">4</td>
+                <td onclick="calcad('5')" role="button" aria-label="5" tabindex="0">5</td>
+                <td onclick="calcad('6')" role="button" aria-label="6" tabindex="0">6</td>
+                <td onclick="calcad('*')" class="vari" role="button" aria-label="Multiplication" tabindex="0">*</td>
+            </tr>
+            <tr>
+                <td onclick="calcad('1')" role="button" aria-label="1" tabindex="0">1</td>
+                <td onclick="calcad('2')" role="button" aria-label="2" tabindex="0">2</td>
+                <td onclick="calcad('3')" role="button" aria-label="3" tabindex="0">3</td>
+                <td onclick="calcad('/')" class="vari" role="button" aria-label="Division" tabindex="0">/</td>
+            </tr>
+            <tr>
+                <td onclick="reset()" role="button" aria-label="Clear" tabindex="0">C</td>
+                <td onclick="calcad('0')" role="button" aria-label="0" tabindex="0">0</td>
+                <td onclick="calcad('.')" role="button" aria-label="Decimal" tabindex="0">.</td>
+                <td class="equalbtn" onclick="execm()" role="button" aria-label="Equals" tabindex="0">=</td>
+            </tr>
+            <!-- Advanced Mode Buttons -->
+            <tr class="advanced-row">
+                <td onclick="calcad('sqrt(')" role="button" aria-label="Square Root" tabindex="0">√</td>
+                <td onclick="calcad('Math.pow(')" role="button" aria-label="Exponentiation" tabindex="0">^</td>
+                <td onclick="calcad('Math.sin(')" role="button" aria-label="Sine" tabindex="0">sin</td>
+                <td onclick="calcad('Math.cos(')" role="button" aria-label="Cosine" tabindex="0">cos</td>
+            </tr>
+            <tr class="advanced-row">
+                <td onclick="calcad('Math.tan(')" role="button" aria-label="Tangent" tabindex="0">tan</td>
+                <td onclick="calcad('Math.log(')" role="button" aria-label="Logarithm" tabindex="0">log</td>
+                <td onclick="calcad('factorial(')" role="button" aria-label="Factorial" tabindex="0">n!</td>
+                <td onclick="plotGraph()" class="vari" role="button" aria-label="Plot Graph" tabindex="0">Graph</td>
+            </tr>
+            <!-- Memory Management Buttons -->
+            <tr>
+                <td onclick="mc()" role="button" aria-label="Memory Clear" tabindex="0">MC</td>
+                <td onclick="mr()" role="button" aria-label="Memory Recall" tabindex="0">MR</td>
+                <td onclick="mplus()" class="vari" role="button" aria-label="Memory Plus" tabindex="0">M+</td>
+                <td onclick="mminus()" class="vari" role="button" aria-label="Memory Minus" tabindex="0">M-</td>
+            </tr>
+            <!-- Financial and Programming Buttons -->
+            <tr class="advanced-row">
+                <td onclick="openFinancialCalculator()" role="button" aria-label="Financial Calculator" tabindex="0">$</td>
+                <td onclick="openProgrammingCalculator()" role="button" aria-label="Programming Calculator" tabindex="0">Prog</td>
+                <td onclick="openMatrixOperations()" role="button" aria-label="Matrix Operations" tabindex="0">Matrix</td>
+                <td onclick="openStatistics()" role="button" aria-label="Statistics" tabindex="0">Stat</td>
+            </tr>
+        </table>
+        <canvas id="graphCanvas" aria-label="Graph Plot" style="display: none;"></canvas>
+    </div>
+    <div id="converterModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeConverter()">&times;</span>
+            <h2>Unit and Currency Converter</h2>
+            <!-- Converter content goes here -->
+        </div>
+    </div>
+    <div id="customizationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCustomization()">&times;</span>
+            <h2>Customize Calculator</h2>
+            <!-- Customization options go here -->
+        </div>
+    </div>
+    <div id="financialModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeFinancialCalculator()">&times;</span>
+            <h2>Financial Calculator</h2>
+            <!-- Financial calculator content goes here -->
+        </div>
+    </div>
+    <div id="programmingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProgrammingCalculator()">&times;</span>
+            <h2>Programming Calculator</h2>
+            <!-- Programming calculator content goes here -->
+        </div>
+    </div>
+    <div id="matrixModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMatrixOperations()">&times;</span>
+            <h2>Matrix Operations</h2>
+            <!-- Matrix operations content goes here -->
+        </div>
+    </div>
+    <div id="statisticsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeStatistics()">&times;</span>
+            <h2>Statistics</h2>
+            <!-- Statistics content goes here -->
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 
 </html>
